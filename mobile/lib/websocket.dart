@@ -4,7 +4,7 @@ import 'package:mobile/store/messages_store.dart';
 import 'package:websocket_manager/websocket_manager.dart';
 
 class WebsocketConnection {
-  final socket = WebsocketManager('ws://localhost:3000/');
+  final socket = WebsocketManager('ws://10.0.2.2:3000/');
   MessagesStore messagesStore;
 
   WebsocketConnection(MessagesStore messagesStore) {
@@ -17,10 +17,16 @@ class WebsocketConnection {
   }
 
   _wireSendMessage() {
-    Timer.periodic(Duration(seconds: 3), (t) => socket.send('message'));
+    Timer.periodic(Duration(seconds: 3), (t) {
+      print('sending message');
+      socket.send('message');
+    });
   }
 
   _wireReceiveMessageToStore() {
-    socket.onMessage((msg) => messagesStore.addMessage(msg));
+    socket.onMessage((msg) {
+      print('received msg $msg');
+      messagesStore.addMessage(msg);
+    });
   }
 }
